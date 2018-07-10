@@ -7,7 +7,7 @@ services:
   provider:
     image: openstf/stf-armv7l
     restart: unless-stopped
-    command: stf provider --name ${STATION_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${APP_IP}/ --public-ip ${PROVIDER_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${APP_IP}/d/${PROVIDER_NAME}/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
+    command: stf provider --name ${APP_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${APP_IP}/ --public-ip ${PROVIDER_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${APP_IP}/d/${PROVIDER_NAME}/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
     ports:
       - 7400-7700:7400-7700
     depends_on:
