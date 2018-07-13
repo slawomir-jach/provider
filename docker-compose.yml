@@ -7,7 +7,9 @@ services:
   provider:
     image: openstf/stf-armv7l
     restart: unless-stopped
-    command: stf provider --name ${PROVIDER_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${APP_IP}/ --public-ip ${PROVIDER_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${APP_IP}/d/${PROVIDER_NAME}/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
+    environment:
+      - DEBUG=adb*
+    command: stf provider --name provider1 --connect-sub tcp://10.24.73.104:7250 --connect-push tcp://10.24.73.104:7270 --storage-url http://10.24.73.105/ --public-ip 10.24.73.104 --heartbeat-interval 10000 --screen-ws-url-pattern "ws://10.25.73.104/d/provider1/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
     ports:
       - 7400-7700:7400-7700
     depends_on:
@@ -27,6 +29,8 @@ services:
     image:  mitchtech/arm-adb
     restart: unless-stopped
     privileged: true
+    environment:
+      - ADB_TRACE=1
     volumes:
       - /dev/bus/usb:/dev/bus/usb
 
@@ -36,7 +40,6 @@ services:
     command: stf triproxy app --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
 
   dev-triproxy:
-    image: openstf/stf-armv7l 
+    image: openstf/stf-armv7l
     restart: unless-stopped
     command: stf triproxy dev --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
-  
