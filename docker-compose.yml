@@ -44,4 +44,3 @@ services:
 #    image: openstf/stf-armv7l 
 #    restart: unless-stopped
 #    command: stf triproxy dev --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
-  
