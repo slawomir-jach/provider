@@ -7,13 +7,15 @@ services:
   provider:
     image: openstf/stf-armv7l
     restart: unless-stopped
-    command: stf provider --name ${PROVIDER_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${APP_IP}/ --public-ip ${PROVIDER_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${APP_IP}/d/${PROVIDER_NAME}/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
+    environment:
+      - DEBUG=adb*
+    command: stf provider --name ${PROVIDER_NAME} --connect-sub tcp://${APP_IP}:7250 --connect-push tcp://${APP_IP}:7270 --storage-url http://${APP_IP}/ --public-ip ${PROVIDER_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${APP_IP}/d/${PROVIDER_NAME}/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
     ports:
       - 7400-7700:7400-7700
     depends_on:
       - adb
-      - dev-triproxy
-      - triproxy
+ #     - dev-triproxy
+ #     - triproxy
       - storage-temp
 
   storage-temp:
@@ -24,19 +26,22 @@ services:
     command: stf storage-temp --port 3000 --save-dir /app/data
 
   adb:
-    image:  mitchtech/arm-adb
+    image: gounthar/docker-adb:stretch
+#mitchtech/arm-adb
     restart: unless-stopped
     privileged: true
+#    environment:
+#      - ADB_TRACE=1
     volumes:
       - /dev/bus/usb:/dev/bus/usb
 
-  triproxy:
-    image: openstf/stf-armv7l
-    restart: unless-stopped
-    command: stf triproxy app --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
+#  triproxy:
+#    image: openstf/stf-armv7l
+#    restart: unless-stopped
+#    command: stf triproxy app --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
 
-  dev-triproxy:
-    image: openstf/stf-armv7l 
-    restart: unless-stopped
-    command: stf triproxy dev --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
+#  dev-triproxy:
+#    image: openstf/stf-armv7l 
+#    restart: unless-stopped
+#    command: stf triproxy dev --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
   
