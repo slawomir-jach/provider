@@ -1,4 +1,4 @@
-FROM sjach/multiarch:latest
+FROM sjach/stf-multiarch:latest
 
 USER root
 RUN mkdir /data && chown stf:stf /data
