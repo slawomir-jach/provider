@@ -5,7 +5,7 @@ volumes:
 
 services:
   provider:
-    image: sjach/stf-multiarch:latest
+    image: registry-testing.kazan.atosworldline.com/sandbox/stf-multiarch:latest
     restart: unless-stopped
     command: stf provider --name ${STATION_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${PUBLIC_IP}/ --public-ip ${PUBLIC_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${PUBLIC_IP}/d/nuc/<%= serial %>/<%= publicPort %>/" --adb-host adb --min-port 7400 --max-port 7700
     ports:
@@ -31,12 +31,12 @@ services:
       - /dev/bus/usb:/dev/bus/usb
 
   triproxy:
-    image:  sjach/stf-multiarch:latest
+    image:  registry-testing.kazan.atosworldline.com/sandbox/stf-multiarch:latest
     restart: unless-stopped
     command: stf triproxy app --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
 
   dev-triproxy:
-    image:  sjach/stf-multiarch:latest
+    image:  registry-testing.kazan.atosworldline.com/sandbox/stf-multiarch:latest
     restart: unless-stopped
     command: stf triproxy dev --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
   
